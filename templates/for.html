@@ -124,14 +124,36 @@ function submit(pre,flag){
   temp_form.submit();
 }
 
+function detect_community(){
+  console.log(JSON.stringify(nodes));
+  console.log(JSON.stringify(links));
+  console.log(JSON.stringify(na));
+  console.log(JSON.stringify(la));
+  if (flag == 0){
+    $("#na").val(JSON.stringify(nodes));
+    $("#la").val(JSON.stringify(links));
+  } else{
+    $("#na").val(JSON.stringify(na));
+    $("#la").val(JSON.stringify(la));
+  }
+
+  
+  var temp = document.getElementById("detect");
+  temp.submit();
+}
 
 function clearsvg(){
   na = [];
   la = [];
   svg.selectAll('g').remove();
+  flag = 0;
 }
 </script>
 
+<form id="detect" action="/detect" method="POST" style="display: none;">
+  <input type="text" id="na" name="na">
+  <input type="text" id="la" name="la">
+</form>
 
 <form id="temp" action="/preset" method="POST">
   <input type="text" id="text" name="text">
@@ -186,8 +208,12 @@ function clearsvg(){
     <p class="card-text" id="desc"></p>
     <a href="" id="link" class="btn btn-primary">Some url</a>
   </div>
-</div>
-<button class="btn btn-primary" onclick="submit($('#temp').data('text'),'')" >Detect Community</button>
+</div><br>
+<button class="btn btn-primary" onclick="detect_community();">Detect Community</button> <br>
+    <form class="form-group" action="/upload" method = "POST" enctype = "multipart/form-data" >
+       <input class="form-control" type = "file" name = "file" />
+       <input class="btn btn-primary" type = "submit"/>
+    </form>
 </div>
 </div>
 
@@ -259,7 +285,6 @@ function selectNode(selectedNode) {
 
 
 var nodes = {{ json_node|tojson }};
-
 var links = {{ json_link|tojson }};
 
 var svg = d3.select("svg"),
@@ -273,9 +298,15 @@ var simulation = d3.forceSimulation()
     .force("charge", d3.forceManyBody().strength(-50))
     .force("center", d3.forceCenter(width / 2, height / 2));
 
+var na = [];
+var la = [];
+
+
 
 function restart(nodes,links){
   svg.selectAll('g').remove();
+
+  
 
   var graph = new Object();
   graph.nodes = nodes;
@@ -313,13 +344,13 @@ function restart(nodes,links){
 }
 
 
+
 restart(nodes,links);
 
 
 ////////////////////// my funcs
 
-var na = [];
-var la = [];
+
 
 function addlink() {
    var s = $("#source").val();
@@ -348,8 +379,10 @@ function addlink() {
     restart(na,la);
   }
 
+var flag = 0;
 
 function add() {
+  flag = 1;
     if(($("#id-node").val() == '' || $("#group-node").val() == '')){
       return;
     }
