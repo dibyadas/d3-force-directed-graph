@@ -4,10 +4,8 @@ import pickle
 import networkx as nx
 import community
 
-UPLOAD_FOLDER = 'uploaded_files'
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route('/')
 def default_view():
@@ -71,12 +69,9 @@ def detect(na=None,la=None):
 @app.route('/upload',methods=['POST'])
 def upload():
 	file = request.files['file']
-	print(os.path.join(os.path.abspath(app.config['UPLOAD_FOLDER']), file.filename))
 	try:
-		file.save('./'+UPLOAD_FOLDER+'/'+file.filename)
-		f = open('./'+UPLOAD_FOLDER+'/'+file.filename)
-		t = f.read()
-		f.close()
+		t = file.read().decode('utf-8')
+		file.close()
 
 		nodes = []
 		edges = []
@@ -92,7 +87,7 @@ def upload():
 
 		return detect(nodes,edges)
 	except Exception as e:
-		# raise e from None
+		raise e from None
 		# print(e)
 		return "Unsuccessful"
 
