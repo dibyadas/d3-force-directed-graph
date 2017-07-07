@@ -61,25 +61,35 @@
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron">
       <div class="container">
-        <h1>Hello, world!</h1>
-        <p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
-        <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
-        
+        <h1>Force Directed Graph</h1>
+        <p>Check out the preset examples or you can make you own graph and detect community clusters in them. Start by adding some nodes and linking them.</p>
       </div>
     </div>
 
     <div class="container">
       <!-- Example row of columns -->
       <div class="row">
-        <div class="col-md-8">
-          <h2>Graph Visualisation</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-        
+        <div class="col-md-4">
+          
+           <div >
+            <input class="form-control" type="text" id='id-node' name="id-node" placeholder="ID"> <br>
+            <input class="form-control" type="number" id='group-node' name="group-node" placeholder="Group"> <br>
+            <button class="btn btn-primary" onclick="add();">Add</button> <br>
+            
+                    
+          </div>
         </div>
         <div class="col-md-4">
-          <h2>Selected Node</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+          <input class="form-control" type="text" id='source' name="source" placeholder="Source ID"> <br>
+            <input class="form-control"  type="text" id='target' name="target" placeholder="Target ID"> <br>
+            <input class="form-control" type="number" id='strength' name="strength" placeholder="Strength"><br>
+            <button class="btn btn-primary" onclick="addlink();">Link</button> <br>
+        </div>
+
+        <div class="col-md-4">
+                  <a class="btn btn-primary" onclick="submit('karate','un');">Karate</a>
+                  <a class="btn btn-primary" onclick="submit('football','un')">Football</a>
+                   <a class="btn btn-info" onclick="clearsvg();"">Clear</a> 
        </div>
 <!--         <div class="col-md-4">
           <h2>Heading</h2>
@@ -90,9 +100,6 @@
 
       <hr>
 
-      <footer>
-        <p>&copy; 2016 Company, Inc.</p>
-      </footer>
     </div> <!-- /container -->
 
     <!-- Bootstrap core JavaScript
@@ -161,7 +168,7 @@ function clearsvg(){
 </form>
 
 
-<div class="row">
+<!-- <div class="row">
   <div class="col-md-12">
   <div class="form-group">
     <input  type="text" id='id-node' name="id-node" placeholder="id">
@@ -183,7 +190,7 @@ function clearsvg(){
     </div>
   </div>
   </div>
-  </div>
+  </div> -->
 <!-- <div>
   <div class="col-md-12">
  <form>
@@ -197,22 +204,22 @@ function clearsvg(){
 </div>
 <div class="row">
 <div class="col-md-10">
-<svg width="1225" height="600" id="svg"></svg>
+<svg width="1000" height="600" id="svg"></svg>
 </div>
 
 <div class="col-md-2">
-<div class="card" style="width: 20rem;">
+<!-- <div class="card" style="width: 20rem;">
   <img class="card-img-top" id="img" src="" alt="Card image cap">
   <div class="card-block">
     <h4 class="card-title" id="id"></h4>
     <p class="card-text" id="desc"></p>
     <a href="" id="link" class="btn btn-primary">Some url</a>
   </div>
-</div><br>
-<button class="btn btn-primary" onclick="detect_community();">Detect Community</button> <br>
+</div><br> -->
+<button class="btn btn-primary" onclick="detect_community();">Detect Community</button>  <br>
     <form class="form-group" action="/upload" method = "POST" enctype = "multipart/form-data" >
-       <input class="form-control" type = "file" name = "file" />
-       <input class="btn btn-primary" type = "submit"/>
+       <input class="form-control" type = "file" name = "file" />  <br>
+       <input class="btn btn-primary" type = "submit"/>  <br>
     </form>
 </div>
 </div>
