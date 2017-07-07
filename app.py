@@ -39,12 +39,13 @@ def preset():
 
 
 @app.route('/detect',methods=['POST'])
-def detect():
-
-	na = json.loads(request.form['na'])
-	la = json.loads(request.form['la'])
+def detect(na=None,la=None):
+	if na:
+		pass
+	else:
+		na = json.loads(request.form['na'])
+		la = json.loads(request.form['la'])
 	
-
 	nodes = []
 	edges = []
 	for i in na:
@@ -71,12 +72,29 @@ def detect():
 def upload():
 	file = request.files['file']
 	print(os.path.join(os.path.abspath(app.config['UPLOAD_FOLDER']), file.filename))
-	file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
-	return 'file uploaded successfully'
-	
+	try:
+		file.save('./'+UPLOAD_FOLDER+'/'+file.filename)
+		f = open('./'+UPLOAD_FOLDER+'/'+file.filename)
+		t = f.read()
+		f.close()
 
+		nodes = []
+		edges = []
 
+		edgelist = t.split('\n')
+		for i in t.replace('\n',' ').split(' '):
+			if i not in nodes:
+				nodes.append({'id':i})
 
+		for i in edgelist:
+			s = i.split(' ')
+			edges.append({'source':{'id':s[0]},'target':{'id':s[1]}})
+
+		return detect(nodes,edges)
+	except Exception as e:
+		# raise e from None
+		# print(e)
+		return "Unsuccessful"
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 9090))
