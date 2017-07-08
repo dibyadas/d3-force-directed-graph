@@ -63,6 +63,9 @@
       <div class="container">
         <h1>Force Directed Graph</h1>
         <p>Check out the preset examples or you can make you own graph and detect community clusters in them. Start by adding some nodes and linking them.</p>
+        <p> Blah blah Blah blah Blah blah Blah blah Blah blah Blah blah Blah blah Blah blah Blah blah Blah blah Blah blah Blah blah Blah blah Blah blah Blah blah Blah blah  </p>
+        <p>Community detection blah blah</p>
+
       </div>
     </div>
 
@@ -70,27 +73,37 @@
       <!-- Example row of columns -->
       <div class="row">
         <div class="col-md-4">
+        <p><h4>Create graph from examples</h4></p>
+          <div><a class="btn btn-primary" onclick="submit('karate','un');">Karate</a></div> <br>
+          <div><a class="btn btn-primary" onclick="submit('football','un')">Football</a></div>
           
-           <div >
-            <input class="form-control" type="text" id='id-node' name="id-node" placeholder="ID"> <br>
-            <input class="form-control" type="number" id='group-node' name="group-node" placeholder="Group"> <br>
-            <button class="btn btn-primary" onclick="add();">Add</button> <br>
-            
-                    
-          </div>
         </div>
         <div class="col-md-4">
-          <input class="form-control" type="text" id='source' name="source" placeholder="Source ID"> <br>
+          <p><h4>Create a graph by uploading an edgelist</h4></p>
+           <form class="form-group" action="/upload" method = "POST" enctype = "multipart/form-data" >
+             <input class="form-control" type = "file" name = "file" />  <br>
+             <input class="btn btn-primary" type = "submit"/>  <br>
+          </form>       
+       </div>
+        <div class="col-md-4">
+        <p><h4>Manually create a graph by adding nodes and linking them</h4></p>
+        <div>
+        <a class="btn btn-info" onclick="clearsvg();"">Create graph</a>
+        </div>    <br>
+        <div id="add_buttons" style="display: none;">
+            <input class="form-control" type="text" id='id-node' name="id-node" placeholder="ID"> <br>
+            <input class="form-control" type="number" id='group-node' name="group-node" placeholder="Group"> <br>
+            <button class="btn btn-primary" onclick="add();">Add</button> <br>           
+          </div>   <br>
+          <div id="link_buttons" style="display: none;">
+            <input class="form-control" type="text" id='source' name="source" placeholder="Source ID"> <br>
             <input class="form-control"  type="text" id='target' name="target" placeholder="Target ID"> <br>
             <input class="form-control" type="number" id='strength' name="strength" placeholder="Strength"><br>
             <button class="btn btn-primary" onclick="addlink();">Link</button> <br>
+            </div>
         </div>
 
-        <div class="col-md-4">
-                  <a class="btn btn-primary" onclick="submit('karate','un');">Karate</a>
-                  <a class="btn btn-primary" onclick="submit('football','un')">Football</a>
-                   <a class="btn btn-info" onclick="clearsvg();"">Clear</a> 
-       </div>
+        
 <!--         <div class="col-md-4">
           <h2>Heading</h2>
           <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
@@ -110,15 +123,14 @@
     <script src="{{ url_for('static', filename = 'bootstrap.min.js') }}"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
-  </body>
-</html>
+  
 
 <script type="text/javascript">
 
 $(document).ready(function(){
   var temp_form = document.getElementById("temp");
   temp_form.style.display = "none";
-  // $('#temp').data('text',"{{ text }}");
+// $('#temp').data('text',"{{ text }}");
 });
 
 function submit(pre,flag){
@@ -150,6 +162,9 @@ function detect_community(){
 }
 
 function clearsvg(){
+  $('#add_buttons').attr('style','');
+  $('#link_buttons').attr('style','');
+  graph_data = [];
   na = [];
   la = [];
   svg.selectAll('g').remove();
@@ -200,14 +215,39 @@ function clearsvg(){
     </div>
     <button class="btn btn-success">Upload File</button>
 </form>
+</div> 
 </div> -->
-</div>
+
+
 <div class="row">
-<div class="col-md-10">
-<svg width="1000" height="600" id="svg"></svg>
+  <div class="col-md-5">  </div>
+  <div class="col-md-2">
+    <button class="btn btn-primary" onclick="detect_community();">Detect Community clusters in the graph</button>  <br>
+  </div>
+  <div class="col-md-5">  </div>
 </div>
 
-<div class="col-md-2">
+
+
+<div class="row">
+<div class="col-md-8">
+<svg width="900" height="500" id="svg"></svg>
+</div>
+<div class="col-md-4">
+  <div class="card" style="width: 20rem;">
+    <div class="card-block">
+    <h4 class="card-title" >Select a node to see its related information</h4>
+    <p class="card-text" id="node_id"></p>
+    <p class="card-text" id="degree_centrality"></p>
+    <p class="card-text" id="betweenness_centrality"></p>
+    <p class="card-text" id="clustering_coefficent"></p> 
+    <!-- <a href="" id="link" class="btn btn-primary">Some url</a> -->
+  </div>
+  </div>
+</div>
+</div>
+
+
 <!-- <div class="card" style="width: 20rem;">
   <img class="card-img-top" id="img" src="" alt="Card image cap">
   <div class="card-block">
@@ -216,13 +256,10 @@ function clearsvg(){
     <a href="" id="link" class="btn btn-primary">Some url</a>
   </div>
 </div><br> -->
-<button class="btn btn-primary" onclick="detect_community();">Detect Community</button>  <br>
-    <form class="form-group" action="/upload" method = "POST" enctype = "multipart/form-data" >
-       <input class="form-control" type = "file" name = "file" />  <br>
-       <input class="btn btn-primary" type = "submit"/>  <br>
-    </form>
-</div>
-</div>
+
+
+</body>
+</html>
 
 <script src="{{ url_for('static',filename='d3.v4.min.js') }}"></script>
 <script>
@@ -274,14 +311,15 @@ function getTextColor(node, neighbors) {
 
 function selectNode(selectedNode) {
 
-  // var info = document.getElementById('id');
-  //   info.innerHTML = selectedNode['id'];
-  //   var img = document.getElementById('img');
-  //   img.src = selectedNode['img'];
-  //   var a = document.getElementById("link");
-  //   a.href = selectedNode['url'];
-  //   var desc = document.getElementById('desc');
-  //   desc.innerHTML = selectedNode['desc'];
+  $('#node_id').html(" ");
+  $('#degree_centrality').html(" ");
+  $('#betweenness_centrality').html(" ");
+  $('#clustering_coefficent').html(" ");
+  $('.card-title').html("Node information");
+  $('#node_id').html("Node ID:-"+selectedNode['id']);
+  $('#degree_centrality').html("Degree Centrality of the node:-"+graph_data[0][selectedNode['id']]);
+  $('#betweenness_centrality').html("Betweenness Centrality of the node:-"+graph_data[1][selectedNode['id']]);
+  $('#clustering_coefficent').html("Clustering Coefficient of the node:-"+graph_data[2][selectedNode['id']]);
 
   var neighbors = getNeighbors(selectedNode)
   console.log(neighbors)
@@ -291,9 +329,7 @@ function selectNode(selectedNode) {
   link.attr('stroke', function (link) { return getLinkColor(selectedNode, link) })
 }
 
-var graph_data = {{ graph_data|tojson }}
-
-console.log(graph_data);
+var graph_data = {{ graph_data|tojson }};
 
 var nodes = {{ json_node|tojson }};
 var links = {{ json_link|tojson }};
@@ -311,7 +347,6 @@ var simulation = d3.forceSimulation()
 
 var na = [];
 var la = [];
-
 
 
 function restart(nodes,links){

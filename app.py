@@ -72,7 +72,6 @@ def upload():
 		file.close()
 
 		nodes = []
-		edges = []
 
 		edgelist = t.split('\n')
 		for i in t.replace('\n',' ').split(' '):
@@ -88,7 +87,7 @@ def upload():
 		for i in edgelist:
 			s = i.split(' ')
 			# edges.append({'source':{'id':s[0]},'target':{'id':s[1]}})
-			edges.append({'source':s[0],'target':s[1],'strength': 1})
+			json_link.append({'source':s[0],'target':s[1],'strength': 1})
 
 		# return detect(nodes,edges)
 		graph_data = info(json_node,json_link)
