@@ -118,7 +118,7 @@
 $(document).ready(function(){
   var temp_form = document.getElementById("temp");
   temp_form.style.display = "none";
-  $('#temp').data('text',"{{ text }}");
+  // $('#temp').data('text',"{{ text }}");
 });
 
 function submit(pre,flag){
@@ -274,22 +274,26 @@ function getTextColor(node, neighbors) {
 
 function selectNode(selectedNode) {
 
-  var info = document.getElementById('id');
-    info.innerHTML = selectedNode['id'];
-    var img = document.getElementById('img');
-    img.src = selectedNode['img'];
-    var a = document.getElementById("link");
-    a.href = selectedNode['url'];
-    var desc = document.getElementById('desc');
-    desc.innerHTML = selectedNode['desc'];
+  // var info = document.getElementById('id');
+  //   info.innerHTML = selectedNode['id'];
+  //   var img = document.getElementById('img');
+  //   img.src = selectedNode['img'];
+  //   var a = document.getElementById("link");
+  //   a.href = selectedNode['url'];
+  //   var desc = document.getElementById('desc');
+  //   desc.innerHTML = selectedNode['desc'];
 
   var neighbors = getNeighbors(selectedNode)
+  console.log(neighbors)
   // we modify the styles to highlight selected nodes
   node.attr('fill', function (node) { return getNodeColor(node) })
   //text.attr('fill', function (node) { return getTextColor(node, neighbors) })
   link.attr('stroke', function (link) { return getLinkColor(selectedNode, link) })
 }
 
+var graph_data = {{ graph_data|tojson }}
+
+console.log(graph_data);
 
 var nodes = {{ json_node|tojson }};
 var links = {{ json_link|tojson }};
