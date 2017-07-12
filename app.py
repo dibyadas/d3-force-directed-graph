@@ -83,10 +83,13 @@ def upload():
 		edges = []
 
 		for i in t:
-			s = re.sub(r"\t",' ',i)
-			s = re.search(r"\d+[ \t]\d+",s)
-			s = s.group().split(' ')
-			edges.append((s[0],s[1]))
+			try:
+				s = re.sub(r"\t",' ',i)
+				s = re.search(r"\d+[ \t]\d+",s)
+				s = s.group().split(' ')
+				edges.append((s[0],s[1]))
+			except Exception:
+				pass
 
 		for i in edges:
 			for j in i:
