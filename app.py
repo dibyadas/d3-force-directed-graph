@@ -1,8 +1,10 @@
-from flask import Flask, redirect, url_for, request, render_template,json
+from flask import Flask, redirect, url_for, request, render_template
+import json
 import os
 import pickle
 import networkx as nx
 import community
+import re
 
 
 app = Flask(__name__)
@@ -39,6 +41,10 @@ def detect(na=None,la=None):
 		pass
 	else:
 		na = json.loads(request.form['na'])
+		# with open("tmp",'w') as f:
+		# 	f.write(request.form['la'])
+		# la = json.load(open('tmp','r'))
+		# return request.form['la']
 		la = json.loads(request.form['la'])
 	
 	nodes = []
@@ -46,7 +52,7 @@ def detect(na=None,la=None):
 	for i in na:
 		nodes.append(i['id'])
 	for i in la:
-		edges.append((i['source']['id'],i['target']['id']))
+		edges.append((i['source'],i['target']))
 
 	G = nx.Graph()
 	G.add_nodes_from(nodes)
@@ -59,8 +65,8 @@ def detect(na=None,la=None):
 
 	json_link = []
 	for i in la:
-		json_link.append({'source':i['source']['id'],'target':i['target']['id'],'strength':1})
-
+		# json_link.append({'source':i['source']['id'],'target':i['target']['id'],'strength':1})
+		json_link.append({'source':i['source'],'target':i['target'],'strength':1})
 	graph_data = info(json_node,json_link)
 	return render_template('for.html',json_link = json_link,json_node =json_node, graph_data=graph_data)
 
@@ -73,10 +79,19 @@ def upload():
 
 		nodes = []
 
-		edgelist = t.split('\n')
-		for i in t.replace('\n',' ').split(' '):
-			if i not in nodes:
-				nodes.append(i)
+		t = re.split(r"\n+",t)
+		edges = []
+
+		for i in t:
+			s = re.sub(r"\t",' ',i)
+			s = re.search(r"\d+[ \t]\d+",s)
+			s = s.group().split(' ')
+			edges.append((s[0],s[1]))
+
+		for i in edges:
+			for j in i:
+				if j not in nodes:
+					nodes.append(j)
 
 		json_node = []
 		json_link = []
@@ -84,10 +99,12 @@ def upload():
 		for i in nodes:
 			json_node.append({'id':i,'group':1})
 
-		for i in edgelist:
-			s = i.split(' ')
-			# edges.append({'source':{'id':s[0]},'target':{'id':s[1]}})
-			json_link.append({'source':s[0],'target':s[1],'strength': 1})
+		for i in edges:
+			try:
+				json_link.append({'source':i[0],'target':i[1],'strength': 1})
+			except Exception:
+				pass
+		
 
 		# return detect(nodes,edges)
 		graph_data = info(json_node,json_link)
@@ -103,6 +120,9 @@ def info(json_node,json_link):
 	G = nx.Graph()
 
 	for i in json_node:
+		if i is "":
+			print(i)
+			raise Exception("here");
 		nodes.append(i['id'])
 
 	for i in json_link:
