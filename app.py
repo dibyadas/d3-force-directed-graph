@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, request, render_template
+from flask import Flask, redirect, url_for, request, render_template, send_from_directory
 import json
 import os
 import pickle
@@ -21,7 +21,7 @@ def default_view():
     	{"source": "2", "target": "3", "strength": 8}
 	]
 	graph_data = info(json_node,json_link)
-	return render_template('for.html',json_link = json_link,json_node =json_node, graph_data=graph_data)
+	return render_template('for.html',json_link = json_link,json_node =json_node, graph_data=graph_data,detected='false')
 
 @app.route('/preset',methods=['POST'])
 def preset():
@@ -32,7 +32,7 @@ def preset():
 	with open('presets/'+text+'/'+flag+'detected_'+text+'_'+'links','rb') as f:
 		json_link = pickle.load(f)
 	graph_data = info(json_node,json_link)
-	return render_template('for.html',json_link = json_link,json_node =json_node, graph_data=graph_data)
+	return render_template('for.html',json_link = json_link,json_node =json_node, graph_data=graph_data,detected='false')
 
 
 @app.route('/detect',methods=['POST'])
@@ -41,10 +41,6 @@ def detect(na=None,la=None):
 		pass
 	else:
 		na = json.loads(request.form['na'])
-		# with open("tmp",'w') as f:
-		# 	f.write(request.form['la'])
-		# la = json.load(open('tmp','r'))
-		# return request.form['la']
 		la = json.loads(request.form['la'])
 	
 	nodes = []
@@ -68,7 +64,7 @@ def detect(na=None,la=None):
 		# json_link.append({'source':i['source']['id'],'target':i['target']['id'],'strength':1})
 		json_link.append({'source':i['source'],'target':i['target'],'strength':1})
 	graph_data = info(json_node,json_link)
-	return render_template('for.html',json_link = json_link,json_node =json_node, graph_data=graph_data)
+	return render_template('for.html',json_link = json_link,json_node =json_node, graph_data=graph_data,detected='true')
 
 @app.route('/upload',methods=['POST'])
 def upload():
@@ -88,8 +84,8 @@ def upload():
 				s = re.search(r"\d+[ \t]\d+",s)
 				s = s.group().split(' ')
 				edges.append((s[0],s[1]))
-			except Exception:
-				pass
+			except Exception as e:
+				pass				
 
 		for i in edges:
 			for j in i:
@@ -111,11 +107,36 @@ def upload():
 
 		# return detect(nodes,edges)
 		graph_data = info(json_node,json_link)
-		return render_template('for.html',json_link = json_link,json_node =json_node, graph_data=graph_data)
+		return render_template('for.html',json_link = json_link,json_node =json_node, graph_data=graph_data,detected='false')
 	except Exception as e:
-		raise e from None
+		# raise e from None
 		# print(e)
 		return "Unsuccessful"
+
+@app.route('/download',methods=['POST'])
+def download():
+	na = json.loads(request.form['nodes'])
+	
+	groups = []
+	for i in na:
+		if i['group'] not in groups:
+			groups.append(i['group'])
+
+	no_of_groups = len(groups)
+
+	template = "Number of community clusters found in the graph:- {} \n".format(no_of_groups)
+
+	na.sort(key=lambda x:x['group'])
+
+	with open('tmp/nodelist.txt','w') as f:
+		f.write(template)
+		f.write("\n")
+		f.write("Node -- Group\n")
+		f.write("-------------\n")
+		for i in na:
+			f.write(i['id']+"  --  "+str(i['group']))
+			f.write("\n")
+	return send_from_directory(directory="tmp", filename="nodelist.txt", as_attachment=True)
 
 def info(json_node,json_link):
 	nodes = []

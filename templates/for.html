@@ -49,7 +49,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Commnity Detection using Louvain algorithm</a>
+          <a class="navbar-brand" href="/">Commnity Detection using Louvain algorithm</a>
         </div>
         <!-- <div id="navbar" class="navbar-collapse collapse">
           <form class="navbar-form navbar-right">
@@ -168,6 +168,15 @@ function detect_community(){
   temp.submit();
 }
 
+function download(){
+  $('#nodes').val(JSON.stringify(node1));
+  console.log($('#nodes').val());
+  var download_form = document.getElementById("download");
+  download_form.submit();
+}
+
+var detected = {{ detected }};
+
 function clearsvg(){
   $('#add_buttons').attr('style','');
   $('#link_buttons').attr('style','');
@@ -192,6 +201,9 @@ function clearsvg(){
   <input type="text" id="flag" name="flag">
 </form>
 
+<form  id="download" target="_blank" action="/download" method="POST" style="display: none;">
+  <input type="text" id="nodes" name="nodes">
+</form>
 
 <!-- <div class="row">
   <div class="col-md-12">
@@ -230,20 +242,23 @@ function clearsvg(){
 
 
 <div class="row">
-  <div class="col-md-5">  </div>
-  <div class="col-md-2">
+  <div class="col-md-4">  </div>
+  <div class="col-md-5">
     <button class="btn btn-primary" onclick="detect_community();">Detect Community clusters in the graph</button>  <br>
   </div>
-  <div class="col-md-5">  </div>
+  <div class="col-md-3">
+    <button class="btn btn-primary" id="detected" style="display: none;" onclick="download();">Download graph as edgelist</button>  <br>
+  </div>
+  <!-- <div class="col-md-4">  </div> -->
 </div>
 
 
 
 <div class="row">
-<div class="col-md-8">
-<svg width="900" height="800" id="svg"></svg>
+<div class="col-md-9">
+<svg width="1000" height="800" id="svg"></svg>
 </div>
-<div class="col-md-4">
+<div class="col-md-3">
   <div class="card" style="width: 20rem;">
     <div class="card-block">
     <h4 class="card-title" >Select a node to see its related information</h4>
@@ -487,5 +502,10 @@ function dragended(d) {
   d.fx = null;
   d.fy = null;
 }
+
+if(detected) {
+  $('#detected').attr('style','');
+}
+
 
 </script>
