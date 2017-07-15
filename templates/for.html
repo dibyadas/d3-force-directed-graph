@@ -342,9 +342,9 @@ function selectNode(selectedNode) {
   $('#clustering_coefficent').html(" ");
   $('.card-title').html("Node information");
   $('#node_id').html("Node ID:-"+selectedNode['id']);
-  $('#degree_centrality').html("Degree Centrality of the node:-"+graph_data[0][selectedNode['id']]);
-  $('#betweenness_centrality').html("Betweenness Centrality of the node:-"+graph_data[1][selectedNode['id']]);
-  $('#clustering_coefficent').html("Clustering Coefficient of the node:-"+graph_data[2][selectedNode['id']]);
+  $('#degree_centrality').html("Degree Centrality of the node:-"+graph_data[0][selectedNode['id']].toFixed(3));
+  $('#betweenness_centrality').html("Betweenness Centrality of the node:-"+graph_data[1][selectedNode['id']].toFixed(3));
+  $('#clustering_coefficent').html("Clustering Coefficient of the node:-"+graph_data[2][selectedNode['id']].toFixed(3));
 
   var neighbors = getNeighbors(selectedNode)
   console.log(neighbors)
