@@ -104,14 +104,18 @@ def upload():
 			except Exception:
 				pass
 		
+		with open('undetected_jazzedge_nodes','wb') as f:
+			pickle.dump(json_node,f)
 
+		with open('undetected_jazzedge_links','wb') as f:
+			pickle.dump(json_link,f)
 		# return detect(nodes,edges)
 		graph_data = info(json_node,json_link)
 		return render_template('for.html',json_link = json_link,json_node =json_node, graph_data=graph_data,detected='false')
 	except Exception as e:
-		# raise e from None
+		raise e from None
 		# print(e)
-		return "Unsuccessful"
+		# return "Unsuccessful"
 
 @app.route('/download',methods=['POST'])
 def download():
